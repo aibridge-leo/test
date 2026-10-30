@@ -1,0 +1,206 @@
+<meta charset="utf-8">
+<title>Aurora Arcade</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Saira+Stencil+One&display=swap">
+<style>
+/* Layout: arcade cabinet select screen — animated starfield behind a headline and a grid of five game "cartridges", one dark look by design. */
+:root{
+  --bg:#04060f;
+  --ink:#eef4ff;
+  --dim:#93a1c4;
+  --line:rgba(150,190,255,.18);
+  --panel:rgba(10,14,30,.72);
+  --hi:#5dffb4;
+  --display:"Saira Stencil One","Impact","Arial Black",sans-serif;
+  --ui:"Chakra Petch","Segoe UI","Malgun Gothic",system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px;overflow-x:hidden}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+main{position:relative;z-index:1;max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:36px;padding-top:56px}
+header{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.kicker{font-size:12px;letter-spacing:.42em;color:var(--hi)}
+h1{font-family:var(--display);font-weight:400;margin:0;font-size:clamp(54px,11vw,128px);line-height:.84;letter-spacing:.02em;
+  background:linear-gradient(100deg,#fff 0%,#9df7ff 30%,#fff 40%,#7dffc4 48%,#c9b6ff 58%,#ffb37a 68%,#fff 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 30px rgba(93,255,180,.28));animation:sheen 6s ease-in-out infinite}
+h1 span{display:block;font-size:.42em;letter-spacing:.5em;margin-top:.16em}
+@keyframes sheen{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+.lead{margin:0;max-width:52ch;font-size:16px;line-height:1.6;color:var(--ink);opacity:.86;text-wrap:balance}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12px;letter-spacing:.18em;color:var(--dim)}
+.meta b{color:var(--ink);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.game{grid-column:span 2;position:relative;display:flex;flex-direction:column;min-width:0;text-decoration:none;color:var(--ink);background:var(--panel);border:1px solid var(--line);
+  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .25s ease,border-color .2s,box-shadow .25s;outline:none;overflow:hidden}
+.game:nth-child(-n+2){grid-column:span 3}
+.game:hover,.game:focus-visible{border-color:var(--c1);box-shadow:0 18px 50px -18px var(--c1),0 0 0 1px var(--c1)}
+.game:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.art{position:relative;aspect-ratio:16/8;max-width:100%;overflow:hidden;background:var(--sky)}
+.game:nth-child(-n+2) .art{aspect-ratio:16/7}
+.art::before{content:"";position:absolute;inset:0;background:var(--floor);}
+.art::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.16) 48%,transparent 60%);transform:translateX(-120%);transition:transform .7s ease}
+.game:hover .art::after,.game:focus-visible .art::after{transform:translateX(120%)}
+.art svg{position:absolute;left:50%;bottom:16%;width:38%;max-width:220px;transform:translateX(-50%);filter:drop-shadow(0 0 14px var(--c1));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.game:hover .art svg{transform:translateX(-50%) translateY(-6px) scale(1.06)}
+.num{position:absolute;top:12px;left:14px;font-family:var(--display);font-size:15px;letter-spacing:.2em;color:rgba(255,255,255,.75)}
+.tag{position:absolute;top:12px;right:12px;font-size:11px;letter-spacing:.2em;padding:4px 8px;background:rgba(0,0,0,.45);border:1px solid var(--c1);color:var(--c1)}
+.body{display:flex;flex-direction:column;gap:10px;padding:16px 18px 18px;flex:1}
+.body h2{font-family:var(--display);font-weight:400;font-size:clamp(26px,3.2vw,36px);line-height:1;margin:0;letter-spacing:.03em;color:#fff;text-shadow:0 0 22px var(--c1)}
+.body h2 small{display:block;font-family:var(--ui);font-size:13px;letter-spacing:.24em;color:var(--c1);margin-top:6px;text-shadow:none}
+.body p{margin:0;font-size:14px;line-height:1.55;color:var(--ink);opacity:.82;text-wrap:pretty}
+.ctl{font-size:12px;color:var(--dim);letter-spacing:.04em;line-height:1.5}
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-top:12px;border-top:1px solid var(--line)}
+.best{display:flex;flex-direction:column;gap:2px}
+.best span{font-size:10px;letter-spacing:.26em;color:var(--dim)}
+.best b{font-size:20px;font-variant-numeric:tabular-nums;line-height:1}
+.play{font:700 13px var(--ui);letter-spacing:.28em;color:#060812;background:linear-gradient(90deg,var(--c1),var(--c2));padding:10px 20px;clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%)}
+footer{font-size:12px;color:var(--dim);letter-spacing:.06em;line-height:1.6}
+footer kbd{font:600 11px var(--ui);color:var(--ink);border:1px solid var(--line);padding:1px 5px}
+
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.game,.game:nth-child(-n+2){grid-column:span 1}.game:nth-child(5){grid-column:span 2}}
+@media (max-width:600px){main{padding-top:36px;gap:26px}.grid{grid-template-columns:1fr}.game,.game:nth-child(-n+2),.game:nth-child(5){grid-column:span 1}.art,.game:nth-child(-n+2) .art{aspect-ratio:16/8}}
+@media (prefers-reduced-motion:reduce){h1{animation:none}.game{transform:none!important;transition:border-color .2s}.art::after{display:none}}
+</style>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+<main>
+  <header>
+    <div class="kicker">5 GAMES · 3D ARCADE CABINET</div>
+    <h1>AURORA<span>ARCADE</span></h1>
+    <p class="lead">하늘, 도로, 사막, 우주, 화산까지. 장르가 다른 3D 게임 다섯 개를 골라서 플레이하세요. 게임마다 최고 기록이 이 화면에 남습니다.</p>
+    <div class="meta"><span><b>5</b> GAMES</span><span>마우스 · 키보드 · 터치 지원</span><span>설치 없이 브라우저에서 바로</span></div>
+  </header>
+
+  <section class="grid" aria-label="게임 목록">
+    <a class="game" href="games/aurora.html" data-key="aurora-strike-best"
+       style="--c1:#5dffb4;--c2:#4fe6ff;--sky:linear-gradient(180deg,#020611 0%,#06213a 55%,#0d3b4c 72%);--floor:radial-gradient(60% 40% at 30% 10%,rgba(93,255,180,.45),transparent 70%),radial-gradient(50% 30% at 70% 18%,rgba(170,110,255,.35),transparent 70%),linear-gradient(180deg,transparent 70%,#031722 72%,#05283a 100%)">
+      <div class="art">
+        <span class="num">01</span><span class="tag">FLIGHT SHOOTER</span>
+        <svg viewBox="0 0 200 80" aria-hidden="true"><path fill="#d8f6ff" d="M100 6 L108 34 L190 52 L190 58 L110 52 L106 66 L124 74 L124 78 L100 74 L76 78 L76 74 L94 66 L90 52 L10 58 L10 52 L92 34 Z"/><circle cx="100" cy="30" r="4" fill="#4fe6ff"/></svg>
+      </div>
+      <div class="body">
+        <h2>Aurora Strike<small>비행 슈팅</small></h2>
+        <p>오로라 아래 극지 바다를 날며 적 편대와 빙결 요새 보스를 격추합니다. 무기 강화, 배럴 롤 회피, 탄막을 지우는 폭탄.</p>
+        <div class="ctl">마우스·WASD 이동 · 자동 사격 · Shift 롤 · Space 폭탄</div>
+        <div class="foot"><div class="best"><span>MY BEST</span><b>—</b></div><span class="play">PLAY</span></div>
+      </div>
+    </a>
+
+    <a class="game" href="games/neon.html" data-key="neon-overdrive-best"
+       style="--c1:#ff3fd2;--c2:#41e9ff;--sky:linear-gradient(180deg,#07020f 0%,#1a0630 60%,#2b0a3d 70%);--floor:repeating-linear-gradient(90deg,transparent 0 10%,rgba(255,63,210,.18) 10% 10.6%),linear-gradient(180deg,transparent 58%,rgba(65,233,255,.25) 60%,transparent 61%),linear-gradient(180deg,transparent 62%,#0b0616 63%,#170a26 100%)">
+      <div class="art">
+        <span class="num">02</span><span class="tag">RACING</span>
+        <svg viewBox="0 0 200 80" aria-hidden="true"><path fill="#ffd9f6" d="M30 62 L40 40 L70 30 L130 30 L160 40 L170 62 L170 70 L30 70 Z"/><path fill="#1a0a26" d="M62 38 L74 33 L126 33 L138 38 Z"/><rect x="36" y="56" width="22" height="5" fill="#ff3fd2"/><rect x="142" y="56" width="22" height="5" fill="#ff3fd2"/></svg>
+      </div>
+      <div class="body">
+        <h2>Neon Overdrive<small>고속 레이싱</small></h2>
+        <p>비 내린 네온 도시의 고속도로를 질주합니다. 차량을 아슬하게 스쳐 니트로를 채우고, 체크포인트를 지나 시간을 늘리세요.</p>
+        <div class="ctl">마우스·A/D 조향 · Space 니트로 · S 감속</div>
+        <div class="foot"><div class="best"><span>MY BEST</span><b>—</b></div><span class="play">PLAY</span></div>
+      </div>
+    </a>
+
+    <a class="game" href="games/canyon.html" data-key="canyon-rush-best"
+       style="--c1:#ffb14a;--c2:#ff6a3d;--sky:linear-gradient(180deg,#2a0f2e 0%,#a8384a 45%,#ffa25a 66%);--floor:radial-gradient(18% 22% at 76% 58%,rgba(255,230,160,.9),transparent 70%),linear-gradient(180deg,transparent 64%,#6a2a24 65%,#c2613c 100%)">
+      <div class="art">
+        <span class="num">03</span><span class="tag">RUNNER</span>
+        <svg viewBox="0 0 200 80" aria-hidden="true"><path fill="#ffe6c8" d="M40 56 L70 44 L110 42 L150 48 L168 56 L150 62 L60 62 Z"/><path fill="#ffe6c8" d="M96 42 L104 22 L114 20 L112 42 Z"/><ellipse cx="80" cy="70" rx="26" ry="3" fill="#ffb14a"/><ellipse cx="140" cy="70" rx="22" ry="3" fill="#ffb14a"/></svg>
+      </div>
+      <div class="body">
+        <h2>Canyon Rush<small>엔드리스 러너</small></h2>
+        <p>노을 진 붉은 협곡을 호버바이크로 달립니다. 바위는 뛰어넘고 아치 밑은 미끄러지며 크리스탈을 모으세요.</p>
+        <div class="ctl">A/D 레인 · W 점프 · S 슬라이드 · 스와이프</div>
+        <div class="foot"><div class="best"><span>MY BEST</span><b>—</b></div><span class="play">PLAY</span></div>
+      </div>
+    </a>
+
+    <a class="game" href="games/void.html" data-key="void-drift-best"
+       style="--c1:#b48cff;--c2:#4fe6ff;--sky:radial-gradient(70% 60% at 30% 40%,rgba(140,60,200,.55),transparent 70%),radial-gradient(50% 50% at 75% 65%,rgba(30,140,200,.45),transparent 70%),#03020c;--floor:radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 60% 20%,#fff,transparent),radial-gradient(1.5px 1.5px at 80% 50%,#fff,transparent),radial-gradient(1px 1px at 35% 75%,#fff,transparent),radial-gradient(1px 1px at 90% 85%,#fff,transparent)">
+      <div class="art">
+        <span class="num">04</span><span class="tag">SPACE COMBAT</span>
+        <svg viewBox="0 0 200 80" aria-hidden="true"><path fill="#ece2ff" d="M100 4 L114 40 L150 62 L118 58 L108 74 L92 74 L82 58 L50 62 L86 40 Z"/><circle cx="100" cy="38" r="5" fill="#4fe6ff"/><circle cx="30" cy="22" r="9" fill="#5a4a6a"/><circle cx="170" cy="30" r="6" fill="#5a4a6a"/></svg>
+      </div>
+      <div class="body">
+        <h2>Void Drift<small>우주 전투</small></h2>
+        <p>성운 속 소행성대에서 360도로 움직이며 싸웁니다. 쪼개지는 소행성, 추적 드론, 그리고 거대한 모선 보스.</p>
+        <div class="ctl">WASD 이동 · 마우스 조준 사격 · Shift 대시</div>
+        <div class="foot"><div class="best"><span>MY BEST</span><b>—</b></div><span class="play">PLAY</span></div>
+      </div>
+    </a>
+
+    <a class="game" href="games/tank.html" data-key="ironclad-arena-best"
+       style="--c1:#ff5a2a;--c2:#ffcf5a;--sky:linear-gradient(180deg,#140606 0%,#3b0f0a 50%,#7a2410 70%);--floor:radial-gradient(30% 8% at 30% 85%,rgba(255,110,30,.6),transparent 70%),radial-gradient(25% 6% at 75% 92%,rgba(255,90,20,.5),transparent 70%),linear-gradient(180deg,transparent 68%,#160807 70%,#241010 100%)">
+      <div class="art">
+        <span class="num">05</span><span class="tag">TANK ARENA</span>
+        <svg viewBox="0 0 200 80" aria-hidden="true"><rect x="40" y="52" width="120" height="18" rx="9" fill="#3a2a26"/><path fill="#ffe0cc" d="M48 40 L152 40 L160 54 L40 54 Z"/><path fill="#ffe0cc" d="M78 26 L120 26 L128 40 L72 40 Z"/><rect x="120" y="29" width="62" height="6" fill="#ffe0cc"/></svg>
+      </div>
+      <div class="body">
+        <h2>Ironclad Arena<small>탱크 아레나</small></h2>
+        <p>용암이 갈라진 화산 지대에서 탱크로 적의 파상 공세를 막아냅니다. 엄폐물을 부수고, 공습을 불러 보스를 쓰러뜨리세요.</p>
+        <div class="ctl">WASD 주행 · 마우스 포탑 조준 · 클릭 사격 · E 특수</div>
+        <div class="foot"><div class="best"><span>MY BEST</span><b>—</b></div><span class="play">PLAY</span></div>
+      </div>
+    </a>
+  </section>
+
+  <footer>게임 안에서 <kbd>P</kbd> 일시정지, <kbd>M</kbd> 소리 끄기, 화면 위쪽 <kbd>← 게임 목록</kbd>으로 이 화면에 돌아옵니다. 최고 기록은 이 브라우저에만 저장됩니다.</footer>
+</main>
+
+<script>
+(() => {
+  // best scores
+  for (const card of document.querySelectorAll('.game')) {
+    let v = 0;
+    try { v = +localStorage.getItem(card.dataset.key) || 0; } catch (e) { v = 0; }
+    card.querySelector('.best b').textContent = v ? v.toLocaleString() : '—';
+  }
+  // tilt
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) for (const card of document.querySelectorAll('.game')) {
+    card.addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse') return;
+      const r = card.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      card.style.setProperty('--ry', (x * 8).toFixed(2) + 'deg'); card.style.setProperty('--rx', (-y * 8).toFixed(2) + 'deg');
+    });
+    card.addEventListener('pointerleave', () => { card.style.setProperty('--ry', '0deg'); card.style.setProperty('--rx', '0deg'); });
+  }
+  // starfield + drifting aurora
+  const cv = document.getElementById('sky'), g = cv.getContext('2d');
+  let W = 0, H = 0, stars = [];
+  function resize() {
+    const pr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight; cv.width = W * pr; cv.height = H * pr; g.setTransform(pr, 0, 0, pr, 0, 0);
+    stars = Array.from({ length: Math.round(W * H / 2600) }, () => ({ x: Math.random() * W, y: Math.random() * H, z: Math.random() * .9 + .1, p: Math.random() * 6.28 }));
+  }
+  addEventListener('resize', resize); resize();
+  let t = 0, last = performance.now();
+  function draw(now) {
+    const dt = Math.min(.05, (now - last) / 1000); last = now; t += dt;
+    g.fillStyle = '#04060f'; g.fillRect(0, 0, W, H);
+    // aurora ribbons
+    for (let k = 0; k < 3; k++) {
+      const grd = g.createLinearGradient(0, 0, 0, H * .7);
+      const col = ['93,255,180', '160,120,255', '79,230,255'][k];
+      grd.addColorStop(0, `rgba(${col},0)`); grd.addColorStop(.45, `rgba(${col},${.10 - k * .02})`); grd.addColorStop(1, `rgba(${col},0)`);
+      g.fillStyle = grd; g.beginPath(); g.moveTo(0, H * .7);
+      for (let x = 0; x <= W; x += 24) {
+        const y = H * (.18 + k * .07) + Math.sin(x * .004 + t * (.25 + k * .07) + k * 2) * 40 + Math.sin(x * .011 - t * .4) * 14;
+        g.lineTo(x, y);
+      }
+      g.lineTo(W, H * .7); g.closePath(); g.fill();
+    }
+    for (const s of stars) {
+      if (!reduce) { s.y += s.z * 6 * dt; if (s.y > H) { s.y = 0; s.x = Math.random() * W; } }
+      const a = .35 + .65 * (.5 + .5 * Math.sin(t * 2 + s.p)) * s.z;
+      g.fillStyle = `rgba(220,235,255,${a})`; g.fillRect(s.x, s.y, s.z * 1.8, s.z * 1.8);
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
